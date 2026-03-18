@@ -167,7 +167,6 @@ export default function Home() {
     setMonedas(nuevasMonedas);
     setSugerenciaActual(sugerencias[Math.floor(Math.random() * sugerencias.length)]);
 
-    // Reset mensual automático
     const mesActual = new Date().getMonth();
     const gastosData = JSON.parse(localStorage.getItem("gastosData") || '{"mes": -1, "gastos": []}');
     if (gastosData.mes !== mesActual) {
@@ -222,7 +221,6 @@ export default function Home() {
     const base = respuestas[Math.floor(Math.random() * respuestas.length)];
     const respuesta = `¿${gustito}? ${base}`;
 
-    // Guardar gasto
     if (montoNum > 0) {
       const mesActual = new Date().getMonth();
       const gastosData = JSON.parse(localStorage.getItem("gastosData") || `{"mes": ${mesActual}, "gastos": []}`);
@@ -269,7 +267,7 @@ export default function Home() {
   };
 
   const compartirWhatsApp = () => {
-    const url = "https://tu-url.com";
+    const url = "https://billetera-empatica.vercel.app";
     const texto = monto
       ? `Este mes ya quemé $${Number(monto).toLocaleString()} en ${gustito} 💀 ¿y vos? ${url}`
       : `¡Mirá mi gustito del mes! ${url}`;
@@ -282,7 +280,7 @@ export default function Home() {
   };
 
   const copiarLink = () => {
-    navigator.clipboard.writeText("https://tu-url.com");
+    navigator.clipboard.writeText("https://billetera-empatica.vercel.app");
     alert("¡Link copiado!");
   };
 
@@ -432,10 +430,10 @@ export default function Home() {
         </Button>
       </div>
 
-      {/* Contador + total mes */}
-      <div style={{ position: "fixed", top: "16px", left: "16px", zIndex: 10, textAlign: "left" }}>
+      {/* Contador + total mes — separado de los botones */}
+      <div style={{ position: "fixed", top: "60px", left: "16px", zIndex: 10, textAlign: "left" }}>
         <p style={{ fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", opacity: 0.6, margin: 0, fontFamily: robotoMono.style.fontFamily }}>
-          🧾 {contador} gustitos compartidos
+          🧾 {contador} gustitos
         </p>
         {totalMes > 0 && (
           <p style={{ fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", margin: 0, fontFamily: robotoMono.style.fontFamily, fontWeight: "bold" }}>
@@ -444,7 +442,7 @@ export default function Home() {
         )}
       </div>
 
-      <main style={{ flex: 1, padding: "80px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
+      <main style={{ flex: 1, padding: "120px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "4px" }}>
@@ -458,7 +456,6 @@ export default function Home() {
           {mensajesPorHora()}
         </p>
 
-        {/* Barra de progreso */}
         <div style={{ width: "100%", maxWidth: "400px", height: "4px", backgroundColor: modoOscuro ? "#1e3a4a" : "#b0d8f0", borderRadius: "999px", marginBottom: "24px", zIndex: 1 }}>
           <motion.div animate={{ width: `${porcentajePaso}%` }} transition={{ duration: 0.4 }} style={{ height: "100%", backgroundColor: color, borderRadius: "999px" }} />
         </div>
@@ -537,7 +534,6 @@ export default function Home() {
               </div>
             )}
 
-            {/* 🆕 PASO 3 — MONTO */}
             {paso === 3 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "0 16px", boxSizing: "border-box" }}>
                 <h2 style={{ fontSize: "clamp(1rem, 4vw, 1.8rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", textAlign: "center" }}>¿CUÁNTO PENSÁS GASTAR?</h2>
@@ -547,13 +543,8 @@ export default function Home() {
                   style={{ width: "clamp(100px, 25vw, 160px)", height: "clamp(100px, 25vw, 160px)", objectFit: "contain" }} />
                 <div style={{ position: "relative", width: "100%", maxWidth: "300px" }}>
                   <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", fontWeight: "bold", fontSize: "16px" }}>$</span>
-                  <input
-                    type="number"
-                    placeholder={placeholderMonto}
-                    value={monto}
-                    onChange={(e) => setMonto(e.target.value)}
-                    style={{ padding: "10px 10px 10px 28px", fontSize: "clamp(14px, 2vw, 16px)", width: "100%", borderRadius: "8px", border: `1px solid ${color}`, color: color, backgroundColor: "transparent", boxSizing: "border-box", fontFamily: robotoMono.style.fontFamily }}
-                  />
+                  <input type="number" placeholder={placeholderMonto} value={monto} onChange={(e) => setMonto(e.target.value)}
+                    style={{ padding: "10px 10px 10px 28px", fontSize: "clamp(14px, 2vw, 16px)", width: "100%", borderRadius: "8px", border: `1px solid ${color}`, color: color, backgroundColor: "transparent", boxSizing: "border-box", fontFamily: robotoMono.style.fontFamily }} />
                 </div>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Button size="lg" onClick={confirmarMonto} style={{ backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
@@ -570,17 +561,13 @@ export default function Home() {
             {paso === 4 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px", padding: "0 16px", boxSizing: "border-box" }}>
                 <h2 style={{ fontSize: "clamp(1.2rem, 5vw, 2.5rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", textAlign: "center" }}>{gustito.toUpperCase()}</h2>
-
                 {monto && Number(monto) > 0 && (
                   <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}
                     style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.1)", border: `1px solid ${color}`, borderRadius: "12px", padding: "12px 20px", textAlign: "center" }}>
                     <p style={{ fontSize: "1.4rem", fontFamily: anton.style.fontFamily, margin: 0 }}>${Number(monto).toLocaleString()}</p>
-                    <p style={{ fontSize: "0.7rem", opacity: 0.6, margin: 0 }}>
-                      {frasePorTotal(totalMes)}
-                    </p>
+                    <p style={{ fontSize: "0.7rem", opacity: 0.6, margin: 0 }}>{frasePorTotal(totalMes)}</p>
                   </motion.div>
                 )}
-
                 <p style={{ fontSize: "clamp(0.8rem, 2.5vw, 1rem)", fontStyle: "italic", maxWidth: "460px", lineHeight: 1.7, textAlign: "center" }}>
                   {respuestaFinal}
                   <br /><br />
