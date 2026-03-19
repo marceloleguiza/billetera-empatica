@@ -2,19 +2,19 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Empática",
-  description: "Descubrí qué gustito te podés dar este mes según tu estado financiero.",
+  title: "Mi Gastito",
+  description: "Decime en qué vas a gastar y te digo qué tan roto estás.",
   openGraph: {
-    title: "Billetera Empática 💸",
-    description: "Descubrí qué gustito te podés dar este mes.",
-    url: "https://tu-url.com",
-    siteName: "Billetera Empática",
+    title: "Mi Gastito 💸",
+    description: "Decime en qué vas a gastar y te digo qué tan roto estás.",
+    url: "https://migastito.vercel.app",
+    siteName: "Mi Gastito",
     images: [
       {
-        url: "https://tu-url.com/og-image.png",
+        url: "https://migastito.vercel.app/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Billetera Empática",
+        alt: "Mi Gastito",
       },
     ],
     locale: "es_AR",
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Billetera Empática 💸",
-    description: "Descubrí qué gustito te podés dar este mes.",
-    images: ["https://tu-url.com/og-image.png"],
+    title: "Mi Gastito 💸",
+    description: "Decime en qué vas a gastar y te digo qué tan roto estás.",
+    images: ["https://migastito.vercel.app/og-image.png"],
   },
 };
 

@@ -56,7 +56,7 @@ const cardPorEstado: Record<string, string> = {
 
 const tooltipPorEstado: Record<string, string> = {
   Ricachon: "💰 Este mes sobra plata y también actitud.",
-  Pobreton: "😬 Alcanza justo… pero el gustito igual va.",
+  Pobreton: "😬 Alcanza justo… pero el gastito igual va.",
   Indigente: "💀 La billetera llora, pero el corazón manda.",
 };
 
@@ -92,8 +92,8 @@ const opcionesPaso1 = [
 const mensajesPorHora = () => {
   const hora = new Date().getHours();
   if (hora >= 6 && hora < 12) return "🌅 Buenos días… ¿ya estás pensando en gastar?";
-  if (hora >= 12 && hora < 18) return "☀️ Buenas tardes… el gustito de hoy no se lo niega nadie.";
-  if (hora >= 18 && hora < 22) return "🌆 Buenas noches… fin del día, hora del gustito.";
+  if (hora >= 12 && hora < 18) return "☀️ Buenas tardes… el gastito de hoy no se lo niega nadie.";
+  if (hora >= 18 && hora < 22) return "🌆 Buenas noches… fin del día, hora del gastito.";
   return "🌙 Tan tarde y pensando en gastar… respeto total.";
 };
 
@@ -101,7 +101,7 @@ const frasePorTotal = (total: number) => {
   if (total === 0) return "";
   if (total < 20000) return "Tranqui… todavía no la chocaste. 😌";
   if (total < 80000) return "Vas bien… para la ruina. 😬";
-  if (total < 150000) return "Esto ya no es un gustito, es un estilo de vida. 💸";
+  if (total < 150000) return "Esto ya no es un gastito, es un estilo de vida. 💸";
   return "Tu billetera pidió asilo político. 💀";
 };
 
@@ -116,10 +116,10 @@ const botonVariant = {
 };
 
 const LOGROS = [
-  { id: "primer_gustito", emoji: "🏆", titulo: "Primer gustito", descripcion: "Completaste tu primer gustito del mes.", condicion: (c: number, _v: Record<string, number>) => c === 1 },
-  { id: "gastador_serial", emoji: "🔥", titulo: "Gastador serial", descripcion: "Ya van 5 gustitos. No hay quien te pare.", condicion: (c: number, _v: Record<string, number>) => c === 5 },
-  { id: "sin_retorno", emoji: "💀", titulo: "Sin retorno financiero", descripcion: "10 gustitos. La billetera ya no sabe qué hacer.", condicion: (c: number, _v: Record<string, number>) => c === 10 },
-  { id: "rey_gustito", emoji: "👑", titulo: "Rey/Reina del gustito", descripcion: "Elegiste Ricachón 3 veces. La abundancia te eligió.", condicion: (_c: number, v: Record<string, number>) => v.Ricachon >= 3 },
+  { id: "primer_gastito", emoji: "🏆", titulo: "Primer gastito", descripcion: "Completaste tu primer gastito del mes.", condicion: (c: number, _v: Record<string, number>) => c === 1 },
+  { id: "gastador_serial", emoji: "🔥", titulo: "Gastador serial", descripcion: "Ya van 5 gastitos. No hay quien te pare.", condicion: (c: number, _v: Record<string, number>) => c === 5 },
+  { id: "sin_retorno", emoji: "💀", titulo: "Sin retorno financiero", descripcion: "10 gastitos. La billetera ya no sabe qué hacer.", condicion: (c: number, _v: Record<string, number>) => c === 10 },
+  { id: "rey_gastito", emoji: "👑", titulo: "Rey/Reina del gastito", descripcion: "Elegiste Ricachón 3 veces. La abundancia te eligió.", condicion: (_c: number, v: Record<string, number>) => v.Ricachon >= 3 },
   { id: "pobreton_comprometido", emoji: "😬", titulo: "Pobretón comprometido", descripcion: "Elegiste Pobretón 3 veces. El riesgo es tu idioma.", condicion: (_c: number, v: Record<string, number>) => v.Pobreton >= 3 },
   { id: "indigente_actitud", emoji: "🪦", titulo: "Indigente con actitud", descripcion: "Elegiste Indigente 3 veces. La ilusión no se rinde.", condicion: (_c: number, v: Record<string, number>) => v.Indigente >= 3 },
 ];
@@ -127,7 +127,7 @@ const LOGROS = [
 export default function Home() {
   const [paso, setPaso] = useState(1);
   const [estadoFinanciero, setEstadoFinanciero] = useState("");
-  const [gustito, setGustito] = useState("");
+  const [gastito, setGastito] = useState("");
   const [monto, setMonto] = useState("");
   const [respuestaFinal, setRespuestaFinal] = useState("");
   const [modoOscuro, setModoOscuro] = useState(false);
@@ -153,11 +153,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const guardado = parseInt(localStorage.getItem("billeteraContador") || "0");
+    const guardado = parseInt(localStorage.getItem("migastitoContador") || "0");
     setContador(guardado);
-    const votosGuardados = JSON.parse(localStorage.getItem("billeteraVotos") || '{"Ricachon":0,"Pobreton":0,"Indigente":0}');
+    const votosGuardados = JSON.parse(localStorage.getItem("migastitoVotos") || '{"Ricachon":0,"Pobreton":0,"Indigente":0}');
     setVotos(votosGuardados);
-    const logrosGuardados = JSON.parse(localStorage.getItem("billeteraLogros") || '[]');
+    const logrosGuardados = JSON.parse(localStorage.getItem("migastitoLogros") || '[]');
     setLogrosDesbloqueados(logrosGuardados);
     const nuevasMonedas = Array.from({ length: 8 }, (_, i) => ({
       id: i,
@@ -168,10 +168,9 @@ export default function Home() {
     setSugerenciaActual(sugerencias[Math.floor(Math.random() * sugerencias.length)]);
 
     const mesActual = new Date().getMonth();
-    const gastosData = JSON.parse(localStorage.getItem("gastosData") || '{"mes": -1, "gastos": []}');
+    const gastosData = JSON.parse(localStorage.getItem("migastitoData") || '{"mes": -1, "gastos": []}');
     if (gastosData.mes !== mesActual) {
-      const nuevo = { mes: mesActual, gastos: [] };
-      localStorage.setItem("gastosData", JSON.stringify(nuevo));
+      localStorage.setItem("migastitoData", JSON.stringify({ mes: mesActual, gastos: [] }));
       setTotalMes(0);
     } else {
       const total = gastosData.gastos.reduce((acc: number, item: { monto: number }) => acc + item.monto, 0);
@@ -205,8 +204,8 @@ export default function Home() {
     }, 150);
   };
 
-  const confirmarGustito = () => {
-    if (gustito.trim() === "") return;
+  const confirmarGastito = () => {
+    if (gastito.trim() === "") return;
     cambiarPaso(3, () => {});
   };
 
@@ -219,30 +218,30 @@ export default function Home() {
     if (estadoFinanciero === "Indigente") respuestas = respuestasIndigente;
 
     const base = respuestas[Math.floor(Math.random() * respuestas.length)];
-    const respuesta = `¿${gustito}? ${base}`;
+    const respuesta = `¿${gastito}? ${base}`;
 
     if (montoNum > 0) {
       const mesActual = new Date().getMonth();
-      const gastosData = JSON.parse(localStorage.getItem("gastosData") || `{"mes": ${mesActual}, "gastos": []}`);
-      const nuevoHistorial = [...gastosData.gastos, { monto: montoNum, gustito, fecha: new Date().toISOString() }];
-      localStorage.setItem("gastosData", JSON.stringify({ mes: mesActual, gastos: nuevoHistorial }));
+      const gastosData = JSON.parse(localStorage.getItem("migastitoData") || `{"mes": ${mesActual}, "gastos": []}`);
+      const nuevoHistorial = [...gastosData.gastos, { monto: montoNum, gastito, fecha: new Date().toISOString() }];
+      localStorage.setItem("migastitoData", JSON.stringify({ mes: mesActual, gastos: nuevoHistorial }));
       const nuevoTotal = nuevoHistorial.reduce((acc: number, item: { monto: number }) => acc + item.monto, 0);
       setTotalMes(nuevoTotal);
     }
 
-    const nuevoContador = parseInt(localStorage.getItem("billeteraContador") || "0") + 1;
-    localStorage.setItem("billeteraContador", nuevoContador.toString());
+    const nuevoContador = parseInt(localStorage.getItem("migastitoContador") || "0") + 1;
+    localStorage.setItem("migastitoContador", nuevoContador.toString());
     setContador(nuevoContador);
 
     const nuevosVotos = { ...votos, [estadoFinanciero]: votos[estadoFinanciero as keyof typeof votos] + 1 };
-    localStorage.setItem("billeteraVotos", JSON.stringify(nuevosVotos));
+    localStorage.setItem("migastitoVotos", JSON.stringify(nuevosVotos));
     setVotos(nuevosVotos);
 
-    const logrosActuales: string[] = JSON.parse(localStorage.getItem("billeteraLogros") || '[]');
+    const logrosActuales: string[] = JSON.parse(localStorage.getItem("migastitoLogros") || '[]');
     for (const logro of LOGROS) {
       if (!logrosActuales.includes(logro.id) && logro.condicion(nuevoContador, nuevosVotos)) {
         const actualizados = [...logrosActuales, logro.id];
-        localStorage.setItem("billeteraLogros", JSON.stringify(actualizados));
+        localStorage.setItem("migastitoLogros", JSON.stringify(actualizados));
         setLogrosDesbloqueados(actualizados);
         setTimeout(() => {
           setLogroNuevo(logro);
@@ -267,10 +266,10 @@ export default function Home() {
   };
 
   const compartirWhatsApp = () => {
-    const url = "https://billetera-empatica.vercel.app";
+    const url = "https://migastito.vercel.app";
     const texto = monto
-      ? `Este mes ya quemé $${Number(monto).toLocaleString()} en ${gustito} 💀 ¿y vos? ${url}`
-      : `¡Mirá mi gustito del mes! ${url}`;
+      ? `Este mes ya quemé $${Number(monto).toLocaleString()} en ${gastito} 💀 ¿y vos? ${url}`
+      : `¡Mirá mi gastito del mes! ${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank");
   };
 
@@ -280,14 +279,14 @@ export default function Home() {
   };
 
   const copiarLink = () => {
-    navigator.clipboard.writeText("https://billetera-empatica.vercel.app");
+    navigator.clipboard.writeText("https://migastito.vercel.app");
     alert("¡Link copiado!");
   };
 
   const volverEmpezar = () => {
     cambiarPaso(1, () => {
       setEstadoFinanciero("");
-      setGustito("");
+      setGastito("");
       setMonto("");
       setRespuestaFinal("");
       setImgActual("ricachon");
@@ -308,9 +307,9 @@ export default function Home() {
         <div style={{ fontSize: "clamp(1.5rem, 5vw, 2.5rem)" }}>💸</div>
         <motion.h1 animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 1, repeat: Infinity }}
           style={{ fontSize: "clamp(1.5rem, 6vw, 2.5rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", margin: 0 }}>
-          BILLETERA EMPÁTICA
+          MI GASTITO
         </motion.h1>
-        <p style={{ marginTop: "16px", fontSize: "clamp(0.8rem, 2vw, 1rem)", opacity: 0.6, fontFamily: robotoMono.style.fontFamily }}>Cargando tu gustito del mes…</p>
+        <p style={{ marginTop: "16px", fontSize: "clamp(0.8rem, 2vw, 1rem)", opacity: 0.6, fontFamily: robotoMono.style.fontFamily }}>Cargando tu gastito del mes…</p>
       </main>
     );
   }
@@ -335,7 +334,6 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Modal logro desbloqueado */}
       <AnimatePresence>
         {logroNuevo && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -356,7 +354,6 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Modal logros */}
       <AnimatePresence>
         {modalLogrosAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -387,7 +384,6 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Modal ¿Qué es esto? */}
       <AnimatePresence>
         {modalAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -399,13 +395,13 @@ export default function Home() {
               <button onClick={() => setModalAbierto(false)} style={{ position: "absolute", top: "16px", right: "16px", background: "none", border: "none", cursor: "pointer", color: color }}>
                 <X size={20} />
               </button>
-              <h2 style={{ fontFamily: anton.style.fontFamily, fontSize: "clamp(1.2rem, 4vw, 1.8rem)", marginBottom: "16px", letterSpacing: "1px" }}>💸 ¿QUÉ ES BILLETERA EMPÁTICA?</h2>
-              <p style={{ marginBottom: "12px", lineHeight: 1.6 }}>Es una app para celebrar tus decisiones financieras sin culpa. Sabemos que a veces la billetera no acompaña… pero el gustito igual va.</p>
+              <h2 style={{ fontFamily: anton.style.fontFamily, fontSize: "clamp(1.2rem, 4vw, 1.8rem)", marginBottom: "16px", letterSpacing: "1px" }}>💸 ¿QUÉ ES MI GASTITO?</h2>
+              <p style={{ marginBottom: "12px", lineHeight: 1.6 }}>Es una app para celebrar tus decisiones financieras sin culpa. Sabemos que a veces la billetera no acompaña… pero el gastito igual va.</p>
               <p style={{ marginBottom: "12px", lineHeight: 1.6 }}><strong>¿Cómo funciona?</strong></p>
               <p style={{ marginBottom: "8px", lineHeight: 1.6 }}>💰 <strong>Ricachón</strong> — Este mes sobra plata y también actitud.</p>
-              <p style={{ marginBottom: "8px", lineHeight: 1.6 }}>😬 <strong>Pobretón</strong> — Alcanza justo… pero el gustito igual va.</p>
+              <p style={{ marginBottom: "8px", lineHeight: 1.6 }}>😬 <strong>Pobretón</strong> — Alcanza justo… pero el gastito igual va.</p>
               <p style={{ marginBottom: "16px", lineHeight: 1.6 }}>💀 <strong>Indigente</strong> — La billetera llora, pero el corazón manda.</p>
-              <p style={{ lineHeight: 1.6, opacity: 0.7, fontSize: "0.9rem" }}>Elegís tu estado, escribís tu gustito, confirmás cuánto vas a gastar y recibís una respuesta empática. ¡Sin juicios!</p>
+              <p style={{ lineHeight: 1.6, opacity: 0.7, fontSize: "0.9rem" }}>Elegís tu estado, escribís tu gastito, confirmás cuánto vas a gastar y recibís una respuesta empática. ¡Sin juicios!</p>
               <Button onClick={() => setModalAbierto(false)} style={{ marginTop: "20px", backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", width: "100%", fontFamily: robotoMono.style.fontFamily }}>
                 ¡ENTENDIDO, VAMOS! 🚀
               </Button>
@@ -414,7 +410,6 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Botones superiores */}
       <div style={{ position: "fixed", top: "16px", right: "16px", display: "flex", gap: "8px", zIndex: 10 }}>
         <Button variant="outline" size="sm" onClick={() => setModalLogrosAbierto(true)}
           style={{ borderColor: color, color: color, backgroundColor: "transparent", fontFamily: robotoMono.style.fontFamily, fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", display: "flex", alignItems: "center", gap: "4px" }}>
@@ -430,10 +425,9 @@ export default function Home() {
         </Button>
       </div>
 
-      {/* Contador + total mes — separado de los botones */}
       <div style={{ position: "fixed", top: "60px", left: "16px", zIndex: 10, textAlign: "left" }}>
         <p style={{ fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", opacity: 0.6, margin: 0, fontFamily: robotoMono.style.fontFamily }}>
-          🧾 {contador} gustitos
+          🧾 {contador} gastitos
         </p>
         {totalMes > 0 && (
           <p style={{ fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", margin: 0, fontFamily: robotoMono.style.fontFamily, fontWeight: "bold" }}>
@@ -448,7 +442,7 @@ export default function Home() {
           style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "4px" }}>
           <div style={{ fontSize: "clamp(1.5rem, 5vw, 3rem)" }}>💸</div>
           <h1 style={{ fontSize: "clamp(1.5rem, 6vw, 4rem)", margin: 0, fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 3px)", lineHeight: 1.1 }}>
-            BILLETERA EMPÁTICA
+            MI GASTITO
           </h1>
         </motion.div>
 
@@ -519,16 +513,16 @@ export default function Home() {
 
             {paso === 2 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "0 16px", boxSizing: "border-box" }}>
-                <h2 style={{ fontSize: "clamp(1rem, 4vw, 1.8rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", textAlign: "center" }}>¿QUÉ GUSTITO TE QUERÉS DAR?</h2>
+                <h2 style={{ fontSize: "clamp(1rem, 4vw, 1.8rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", textAlign: "center" }}>¿QUÉ GASTITO TE QUERÉS DAR?</h2>
                 <motion.img initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.4 }}
                   src={`/${estadoFinanciero.toLowerCase()}.png`} alt={estadoFinanciero}
                   style={{ width: "clamp(120px, 30vw, 200px)", height: "clamp(120px, 30vw, 200px)", objectFit: "contain" }} />
-                <input type="text" placeholder={sugerenciaActual} value={gustito} onChange={(e) => setGustito(e.target.value)}
+                <input type="text" placeholder={sugerenciaActual} value={gastito} onChange={(e) => setGastito(e.target.value)}
                   style={{ padding: "10px", fontSize: "clamp(12px, 2vw, 14px)", width: "100%", maxWidth: "300px", borderRadius: "8px", border: `1px solid ${color}`, color: color, backgroundColor: "transparent", boxSizing: "border-box", fontFamily: robotoMono.style.fontFamily }} />
                 <p style={{ fontSize: "0.75rem", opacity: 0.6 }}>
-                  💡 Sugerencia: <span style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => setGustito(sugerenciaActual)}>{sugerenciaActual}</span>
+                  💡 Sugerencia: <span style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => setGastito(sugerenciaActual)}>{sugerenciaActual}</span>
                 </p>
-                <Button size="lg" onClick={confirmarGustito} style={{ backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
+                <Button size="lg" onClick={confirmarGastito} style={{ backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
                   SIGUIENTE →
                 </Button>
               </div>
@@ -537,7 +531,7 @@ export default function Home() {
             {paso === 3 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "0 16px", boxSizing: "border-box" }}>
                 <h2 style={{ fontSize: "clamp(1rem, 4vw, 1.8rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", textAlign: "center" }}>¿CUÁNTO PENSÁS GASTAR?</h2>
-                <p style={{ fontSize: "0.8rem", opacity: 0.6 }}>en {gustito}</p>
+                <p style={{ fontSize: "0.8rem", opacity: 0.6 }}>en {gastito}</p>
                 <motion.img initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.4 }}
                   src={`/${estadoFinanciero.toLowerCase()}.png`} alt={estadoFinanciero}
                   style={{ width: "clamp(100px, 25vw, 160px)", height: "clamp(100px, 25vw, 160px)", objectFit: "contain" }} />
@@ -560,7 +554,7 @@ export default function Home() {
 
             {paso === 4 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px", padding: "0 16px", boxSizing: "border-box" }}>
-                <h2 style={{ fontSize: "clamp(1.2rem, 5vw, 2.5rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", textAlign: "center" }}>{gustito.toUpperCase()}</h2>
+                <h2 style={{ fontSize: "clamp(1.2rem, 5vw, 2.5rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", textAlign: "center" }}>{gastito.toUpperCase()}</h2>
                 {monto && Number(monto) > 0 && (
                   <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}
                     style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.1)", border: `1px solid ${color}`, borderRadius: "12px", padding: "12px 20px", textAlign: "center" }}>
@@ -576,7 +570,7 @@ export default function Home() {
                 <p style={{ fontSize: "0.7rem", opacity: 0.6, fontFamily: robotoMono.style.fontFamily }}>
                   🔥 Ya somos {contador} personas gastando sin culpa
                 </p>
-                <motion.img src={cardPorEstado[estadoFinanciero]} alt="Tu card" whileHover={{ scale: 1.25 }} transition={{ duration: 0.2 }}
+                <motion.img src={cardPorEstado[estadoFinanciero]} alt="Mi gastito" whileHover={{ scale: 1.25 }} transition={{ duration: 0.2 }}
                   style={{ width: "clamp(200px, 70vw, 300px)", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.15)", cursor: "pointer" }} />
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center" }}>
                   <Button size="sm" onClick={descargarCard} style={{ backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily }}><Download size={16} /> DESCARGAR</Button>
