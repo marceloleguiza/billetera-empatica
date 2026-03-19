@@ -462,7 +462,7 @@ export default function Home() {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
                 style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.12)", border: `2px solid ${color}`, borderRadius: "24px", padding: "clamp(16px, 4vw, 32px)", width: "100%", boxSizing: "border-box" }}>
                 <p style={{ fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)", marginBottom: "20px", letterSpacing: "1px", fontWeight: "bold" }}>
-                  DECIME EN QUÉ VAS A GASTAR Y TE DIGO QUÉ TAN ROTO ESTÁS
+                  ¿QUÉ TAN ROTO ESTÁS ESTE MES? 💀
                 </p>
                 <Button onClick={() => seleccionarEstado(opcionesPaso1[Math.floor(Math.random() * 3)].id)}
                   style={{ marginBottom: "20px", backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
@@ -592,7 +592,7 @@ export default function Home() {
         <p style={{ marginBottom: "8px" }}>
           HECHO POR <a href="https://instagram.com/EnemigoMutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>@ENEMIGOMUTANTE</a> © 2026
         </p>
-        <a href="https://cafecito.app/enemigomutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
+        <a href="https://cafecito.app/mutazion" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
           ☕ INVITAME UN CAFECITO
         </a>
       </footer>
