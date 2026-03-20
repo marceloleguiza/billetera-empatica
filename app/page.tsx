@@ -410,6 +410,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Botones superiores */}
       <div style={{ position: "fixed", top: "16px", right: "16px", display: "flex", gap: "8px", zIndex: 10 }}>
         <Button variant="outline" size="sm" onClick={() => setModalLogrosAbierto(true)}
           style={{ borderColor: color, color: color, backgroundColor: "transparent", fontFamily: robotoMono.style.fontFamily, fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", display: "flex", alignItems: "center", gap: "4px" }}>
@@ -425,14 +426,15 @@ export default function Home() {
         </Button>
       </div>
 
-      <div style={{ position: "fixed", top: "60px", left: "16px", zIndex: 10, textAlign: "left" }}>
-        <p style={{ fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", opacity: 0.6, margin: 0, fontFamily: robotoMono.style.fontFamily }}>
+      {/* Pills arriba a la izquierda */}
+      <div style={{ position: "fixed", top: "16px", left: "16px", zIndex: 10, display: "flex", flexDirection: "column", gap: "4px" }}>
+        <div style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)", borderRadius: "999px", padding: "4px 10px", fontSize: "clamp(0.55rem, 1.2vw, 0.7rem)", fontFamily: robotoMono.style.fontFamily, display: "inline-flex", alignItems: "center", gap: "4px" }}>
           🧾 {contador} gastitos
-        </p>
+        </div>
         {totalMes > 0 && (
-          <p style={{ fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", margin: 0, fontFamily: robotoMono.style.fontFamily, fontWeight: "bold" }}>
-            💸 Este mes: ${totalMes.toLocaleString()}
-          </p>
+          <div style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)", borderRadius: "999px", padding: "4px 10px", fontSize: "clamp(0.55rem, 1.2vw, 0.7rem)", fontFamily: robotoMono.style.fontFamily, fontWeight: "bold", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+            💸 ${totalMes.toLocaleString()}
+          </div>
         )}
       </div>
 
@@ -592,7 +594,7 @@ export default function Home() {
         <p style={{ marginBottom: "8px" }}>
           HECHO POR <a href="https://instagram.com/EnemigoMutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>@ENEMIGOMUTANTE</a> © 2026
         </p>
-        <a href="https://cafecito.app/mutazion" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
+        <a href="https://cafecito.app/enemigomutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
           ☕ INVITAME UN CAFECITO
         </a>
       </footer>
