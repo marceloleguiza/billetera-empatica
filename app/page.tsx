@@ -663,9 +663,9 @@ export default function Home() {
 
       <footer style={{ padding: "20px", textAlign: "center", fontSize: "clamp(0.6rem, 1.5vw, 0.75rem)", opacity: 0.6, borderTop: `1px solid ${modoOscuro ? "#1e3a4a" : "#b0d8f0"}`, fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
         <p style={{ marginBottom: "8px" }}>
-          HECHO POR <a href="https://instagram.com/EnemigoMutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>@ENEMIGOMUTANTE</a> © 2026
+          HECHO POR <a href="https://instagram.com/mutazion" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>@ENEMIGOMUTANTE</a> © 2026
         </p>
-        <a href="https://cafecito.app/enemigomutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
+        <a href="https://cafecito.app/mutazion" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
           ☕ INVITAME UN CAFECITO
         </a>
       </footer>
