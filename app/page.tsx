@@ -295,7 +295,7 @@ export default function Home() {
   const totalVotos = votos.Ricachon + votos.Pobreton + votos.Indigente || 1;
   const bg = modoOscuro ? "#0f1e2a" : "#5ab0d4";
   const color = modoOscuro ? "#e0f4ff" : "#1a3a4a";
-  const navBg = modoOscuro ? "rgba(15,30,42,0.85)" : "rgba(255,255,255,0.2)";
+  const navBg = modoOscuro ? "rgba(15,30,42,0.9)" : "rgba(255,255,255,0.2)";
   const porcentajePaso = paso === 1 ? 25 : paso === 2 ? 50 : paso === 3 ? 75 : 100;
 
   if (splash) {
@@ -415,53 +415,60 @@ export default function Home() {
       {/* NAVBAR */}
       <nav style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
+        top: 0, left: 0, right: 0,
         zIndex: 10,
         backgroundColor: navBg,
         backdropFilter: "blur(12px)",
         borderBottom: `1px solid ${modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
-        padding: "12px 20px",
+        padding: "16px 24px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         boxSizing: "border-box",
+        minHeight: "72px",
       }}>
         {/* Izquierda: contador + total */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-          <span style={{ fontSize: "clamp(0.7rem, 1.5vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, opacity: 0.7 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: "120px" }}>
+          <span style={{ fontSize: "clamp(0.75rem, 1.8vw, 0.9rem)", fontFamily: robotoMono.style.fontFamily, opacity: 0.7 }}>
             🧾 {contador} gastitos
           </span>
           {totalMes > 0 && (
-            <span style={{ fontSize: "clamp(0.8rem, 1.8vw, 1rem)", fontFamily: robotoMono.style.fontFamily, fontWeight: "bold" }}>
+            <span style={{ fontSize: "clamp(0.9rem, 2vw, 1.1rem)", fontFamily: robotoMono.style.fontFamily, fontWeight: "bold" }}>
               💸 ${totalMes.toLocaleString()}
             </span>
           )}
         </div>
 
+        {/* Centro: vacío */}
+        <div style={{ flex: 1 }} />
+
         {/* Derecha: iconos */}
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           <button onClick={() => setModalLogrosAbierto(true)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: color, display: "flex", alignItems: "center", gap: "4px", fontSize: "clamp(0.7rem, 1.5vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, padding: "6px 10px", borderRadius: "8px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}>
-            <Trophy size={16} /> {logrosDesbloqueados.length}/{LOGROS.length}
+            style={{ background: "none", border: "none", cursor: "pointer", color: color, display: "flex", alignItems: "center", gap: "6px", fontSize: "clamp(0.75rem, 1.8vw, 0.9rem)", fontFamily: robotoMono.style.fontFamily, padding: "8px 12px", borderRadius: "10px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}>
+            <Trophy size={18} /> {logrosDesbloqueados.length}/{LOGROS.length}
           </button>
           <button onClick={() => setModalAbierto(true)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: color, padding: "6px", borderRadius: "8px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", display: "flex", alignItems: "center" }}>
-            <Info size={18} />
+            style={{ background: "none", border: "none", cursor: "pointer", color: color, padding: "8px", borderRadius: "10px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", display: "flex", alignItems: "center" }}>
+            <Info size={20} />
           </button>
           <button onClick={() => setModoOscuro(!modoOscuro)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: color, padding: "6px", borderRadius: "8px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", display: "flex", alignItems: "center" }}>
-            {modoOscuro ? <Sun size={18} /> : <Moon size={18} />}
+            style={{ background: "none", border: "none", cursor: "pointer", color: color, padding: "8px", borderRadius: "10px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", display: "flex", alignItems: "center" }}>
+            {modoOscuro ? <Sun size={20} /> : <Moon size={20} />}
           </button>
         </div>
       </nav>
 
-      <main style={{ flex: 1, padding: "100px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
+      <main style={{ flex: 1, padding: "90px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
+        {/* Imagen grupal + título */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "4px" }}>
-          <div style={{ fontSize: "clamp(1.5rem, 5vw, 3rem)" }}>💸</div>
+          style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "8px" }}>
+          <img
+            src="/grupal.png"
+            alt="Personajes"
+            style={{ width: "clamp(160px, 40vw, 280px)", objectFit: "contain", marginBottom: "0px" }}
+          />
           <h1 style={{ fontSize: "clamp(1.5rem, 6vw, 4rem)", margin: 0, fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 3px)", lineHeight: 1.1 }}>
             MI GASTITO
           </h1>
