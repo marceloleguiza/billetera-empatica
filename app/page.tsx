@@ -333,7 +333,6 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Modal logro */}
       <AnimatePresence>
         {logroNuevo && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -354,7 +353,6 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Modal logros */}
       <AnimatePresence>
         {modalLogrosAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -385,7 +383,6 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Modal ¿Qué es esto? */}
       <AnimatePresence>
         {modalAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -449,14 +446,10 @@ export default function Home() {
 
       <main style={{ flex: 1, padding: "90px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
-        {/* Imagen grupal + título centrados */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "8px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <img
-            src="/grupal.png"
-            alt="Personajes"
-            style={{ width: "clamp(160px, 40vw, 280px)", objectFit: "contain", display: "block", margin: "0 auto" }}
-          />
+          <img src="/grupal.png" alt="Personajes"
+            style={{ width: "clamp(160px, 40vw, 280px)", objectFit: "contain", display: "block", margin: "0 auto" }} />
           <h1 style={{ fontSize: "clamp(1.5rem, 6vw, 4rem)", margin: 0, fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 3px)", lineHeight: 1.1 }}>
             MI GASTITO
           </h1>
@@ -466,7 +459,8 @@ export default function Home() {
           {mensajesPorHora()}
         </p>
 
-        <div style={{ width: "100%", maxWidth: "400px", height: "4px", backgroundColor: modoOscuro ? "#1e3a4a" : "#b0d8f0", borderRadius: "999px", marginBottom: "24px", zIndex: 1 }}>
+        {/* Barra de progreso más ancha y gruesa */}
+        <div style={{ width: "100%", maxWidth: "600px", height: "10px", backgroundColor: modoOscuro ? "#1e3a4a" : "#b0d8f0", borderRadius: "999px", marginBottom: "24px", zIndex: 1 }}>
           <motion.div animate={{ width: `${porcentajePaso}%` }} transition={{ duration: 0.4 }} style={{ height: "100%", backgroundColor: color, borderRadius: "999px" }} />
         </div>
 
