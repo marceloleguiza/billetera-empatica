@@ -151,13 +151,11 @@ export default function Home() {
   const inputGastitoRef = useRef<HTMLInputElement>(null);
   const inputMontoRef = useRef<HTMLInputElement>(null);
 
-  // Loading reducido a 1.5s
   useEffect(() => {
     const timer = setTimeout(() => setSplash(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  // Autoselect input al llegar al paso
   useEffect(() => {
     if (paso === 2) setTimeout(() => inputGastitoRef.current?.focus(), 400);
     if (paso === 3) setTimeout(() => inputMontoRef.current?.focus(), 400);
@@ -500,40 +498,26 @@ export default function Home() {
           <motion.div key={paso} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -24 }} transition={{ duration: 0.3 }}
             style={{ width: "100%", maxWidth: "600px", zIndex: 1, textAlign: "center" }}>
 
+            {/* PASO 1 — orden: título → personajes → estadísticas → botón destino */}
             {paso === 1 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
                 style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.12)", border: `2px solid ${color}`, borderRadius: "24px", padding: "clamp(16px, 4vw, 32px)", width: "100%", boxSizing: "border-box" }}>
-                <p style={{ fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)", marginBottom: "20px", letterSpacing: "1px", fontWeight: "bold" }}>
+
+                {/* 1. Título */}
+                <p style={{ fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)", marginBottom: "24px", letterSpacing: "1px", fontWeight: "bold" }}>
                   ¿QUÉ TAN ROTO ESTÁS ESTE MES? 💀
                 </p>
-                <Button onClick={() => seleccionarEstado(opcionesPaso1[Math.floor(Math.random() * 3)].id)}
-                  style={{ marginBottom: "20px", backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
-                  🎰 QUE DECIDA EL DESTINO
-                </Button>
 
-                {totalVotos > 1 && (
-                  <div style={{ marginBottom: "20px", fontSize: "0.75rem", opacity: 0.7 }}>
-                    {opcionesPaso1.map(({ id, label }) => (
-                      <div key={id} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px", justifyContent: "center" }}>
-                        <span style={{ width: "100px", textAlign: "right" }}>{label}</span>
-                        <div style={{ width: "120px", height: "4px", backgroundColor: modoOscuro ? "#1e3a4a" : "#b0d8f0", borderRadius: "999px" }}>
-                          <motion.div animate={{ width: `${Math.round((votos[id as keyof typeof votos] / totalVotos) * 100)}%` }} transition={{ duration: 0.4 }} style={{ height: "100%", backgroundColor: color, borderRadius: "999px" }} />
-                        </div>
-                        <span>{Math.round((votos[id as keyof typeof votos] / totalVotos) * 100)}%</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
+                {/* 2. Personajes + botones — PRIORIDAD */}
                 {girando ? (
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
                     <motion.img key={imgActual} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} src={`/${imgActual}.png`} alt="girando"
                       style={{ width: "clamp(100px, 25vw, 160px)", height: "clamp(100px, 25vw, 160px)", objectFit: "contain" }} />
                     <p style={{ fontSize: "0.9rem", letterSpacing: "1px" }}>ANALIZANDO TU BILLETERA…</p>
                   </div>
                 ) : (
                   <motion.div variants={botonesVariants} initial="hidden" animate="show"
-                    style={{ display: "flex", flexWrap: "wrap", gap: "24px", justifyContent: "center", marginTop: "10px" }}>
+                    style={{ display: "flex", flexWrap: "wrap", gap: "24px", justifyContent: "center", marginBottom: "24px" }}>
                     {opcionesPaso1.map(({ id, label }) => (
                       <motion.div key={id} variants={botonVariant}
                         style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}
@@ -549,6 +533,28 @@ export default function Home() {
                     ))}
                   </motion.div>
                 )}
+
+                {/* 3. Estadísticas de votos */}
+                {totalVotos > 1 && (
+                  <div style={{ marginBottom: "20px", fontSize: "0.75rem", opacity: 0.7 }}>
+                    {opcionesPaso1.map(({ id, label }) => (
+                      <div key={id} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px", justifyContent: "center" }}>
+                        <span style={{ width: "100px", textAlign: "right" }}>{label}</span>
+                        <div style={{ width: "120px", height: "4px", backgroundColor: modoOscuro ? "#1e3a4a" : "#b0d8f0", borderRadius: "999px" }}>
+                          <motion.div animate={{ width: `${Math.round((votos[id as keyof typeof votos] / totalVotos) * 100)}%` }} transition={{ duration: 0.4 }} style={{ height: "100%", backgroundColor: color, borderRadius: "999px" }} />
+                        </div>
+                        <span>{Math.round((votos[id as keyof typeof votos] / totalVotos) * 100)}%</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* 4. Botón destino — abajo de todo */}
+                <Button onClick={() => seleccionarEstado(opcionesPaso1[Math.floor(Math.random() * 3)].id)}
+                  style={{ backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px", width: "100%" }}>
+                  🎰 QUE DECIDA EL DESTINO
+                </Button>
+
               </motion.div>
             )}
 
@@ -657,9 +663,9 @@ export default function Home() {
 
       <footer style={{ padding: "20px", textAlign: "center", fontSize: "clamp(0.6rem, 1.5vw, 0.75rem)", opacity: 0.6, borderTop: `1px solid ${modoOscuro ? "#1e3a4a" : "#b0d8f0"}`, fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
         <p style={{ marginBottom: "8px" }}>
-          HECHO POR <a href="https://instagram.com/mutazion" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>@ENEMIGOMUTANTE</a> © 2026
+          HECHO POR <a href="https://instagram.com/EnemigoMutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>@ENEMIGOMUTANTE</a> © 2026
         </p>
-        <a href="https://cafecito.app/mutazion" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
+        <a href="https://cafecito.app/enemigomutante" target="_blank" rel="noopener noreferrer" style={{ color: color, textDecoration: "none", fontWeight: "bold" }}>
           ☕ INVITAME UN CAFECITO
         </a>
       </footer>
