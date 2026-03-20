@@ -414,20 +414,12 @@ export default function Home() {
 
       {/* NAVBAR */}
       <nav style={{
-        position: "fixed",
-        top: 0, left: 0, right: 0,
-        zIndex: 10,
-        backgroundColor: navBg,
-        backdropFilter: "blur(12px)",
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 10,
+        backgroundColor: navBg, backdropFilter: "blur(12px)",
         borderBottom: `1px solid ${modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
-        padding: "16px 24px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        boxSizing: "border-box",
-        minHeight: "72px",
+        padding: "16px 24px", display: "flex", alignItems: "center",
+        justifyContent: "space-between", boxSizing: "border-box", minHeight: "72px",
       }}>
-        {/* Izquierda: contador + total */}
         <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: "120px" }}>
           <span style={{ fontSize: "clamp(0.75rem, 1.8vw, 0.9rem)", fontFamily: robotoMono.style.fontFamily, opacity: 0.7 }}>
             🧾 {contador} gastitos
@@ -438,11 +430,7 @@ export default function Home() {
             </span>
           )}
         </div>
-
-        {/* Centro: vacío */}
         <div style={{ flex: 1 }} />
-
-        {/* Derecha: iconos */}
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
           <button onClick={() => setModalLogrosAbierto(true)}
             style={{ background: "none", border: "none", cursor: "pointer", color: color, display: "flex", alignItems: "center", gap: "6px", fontSize: "clamp(0.75rem, 1.8vw, 0.9rem)", fontFamily: robotoMono.style.fontFamily, padding: "8px 12px", borderRadius: "10px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}>
@@ -461,13 +449,13 @@ export default function Home() {
 
       <main style={{ flex: 1, padding: "90px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
-        {/* Imagen grupal + título */}
+        {/* Imagen grupal + título centrados */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "8px" }}>
+          style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "8px", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <img
             src="/grupal.png"
             alt="Personajes"
-            style={{ width: "clamp(160px, 40vw, 280px)", objectFit: "contain", marginBottom: "0px" }}
+            style={{ width: "clamp(160px, 40vw, 280px)", objectFit: "contain", display: "block", margin: "0 auto" }}
           />
           <h1 style={{ fontSize: "clamp(1.5rem, 6vw, 4rem)", margin: 0, fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 3px)", lineHeight: 1.1 }}>
             MI GASTITO
@@ -626,6 +614,5 @@ export default function Home() {
       </footer>
 
     </div>
-
   );
 }
