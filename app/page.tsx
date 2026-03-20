@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Anton, Roboto_Mono } from "next/font/google";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
-import { Download, MessageCircle, Instagram, Link, RefreshCw, X, Trophy } from "lucide-react";
+import { Download, MessageCircle, Instagram, Link, RefreshCw, X, Trophy, Info, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const anton = Anton({ subsets: ["latin"], weight: "400" });
@@ -211,12 +211,10 @@ export default function Home() {
 
   const confirmarMonto = () => {
     const montoNum = Number(monto.replace(/\./g, "").replace(",", "."));
-
     let respuestas: string[] = [];
     if (estadoFinanciero === "Ricachon") respuestas = respuestasRicachon;
     if (estadoFinanciero === "Pobreton") respuestas = respuestasPobreton;
     if (estadoFinanciero === "Indigente") respuestas = respuestasIndigente;
-
     const base = respuestas[Math.floor(Math.random() * respuestas.length)];
     const respuesta = `¿${gastito}? ${base}`;
 
@@ -297,6 +295,7 @@ export default function Home() {
   const totalVotos = votos.Ricachon + votos.Pobreton + votos.Indigente || 1;
   const bg = modoOscuro ? "#0f1e2a" : "#5ab0d4";
   const color = modoOscuro ? "#e0f4ff" : "#1a3a4a";
+  const navBg = modoOscuro ? "rgba(15,30,42,0.85)" : "rgba(255,255,255,0.2)";
   const porcentajePaso = paso === 1 ? 25 : paso === 2 ? 50 : paso === 3 ? 75 : 100;
 
   if (splash) {
@@ -334,6 +333,7 @@ export default function Home() {
         }
       `}</style>
 
+      {/* Modal logro */}
       <AnimatePresence>
         {logroNuevo && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -354,6 +354,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Modal logros */}
       <AnimatePresence>
         {modalLogrosAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -384,6 +385,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Modal ¿Qué es esto? */}
       <AnimatePresence>
         {modalAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -410,35 +412,52 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* Botones superiores */}
-      <div style={{ position: "fixed", top: "16px", right: "16px", display: "flex", gap: "8px", zIndex: 10 }}>
-        <Button variant="outline" size="sm" onClick={() => setModalLogrosAbierto(true)}
-          style={{ borderColor: color, color: color, backgroundColor: "transparent", fontFamily: robotoMono.style.fontFamily, fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)", display: "flex", alignItems: "center", gap: "4px" }}>
-          <Trophy size={14} /> {logrosDesbloqueados.length}/{LOGROS.length}
-        </Button>
-        <Button variant="outline" size="sm" onClick={() => setModalAbierto(true)}
-          style={{ borderColor: color, color: color, backgroundColor: "transparent", fontFamily: robotoMono.style.fontFamily, fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)" }}>
-          ¿QUÉ ES ESTO?
-        </Button>
-        <Button variant="outline" size="sm" onClick={() => setModoOscuro(!modoOscuro)}
-          style={{ borderColor: color, color: color, backgroundColor: "transparent", fontFamily: robotoMono.style.fontFamily, fontSize: "clamp(0.6rem, 1.5vw, 0.8rem)" }}>
-          {modoOscuro ? "☀️ CLARO" : "🌙 OSCURO"}
-        </Button>
-      </div>
-
-      {/* Pills arriba a la izquierda */}
-      <div style={{ position: "fixed", top: "16px", left: "16px", zIndex: 10, display: "flex", flexDirection: "column", gap: "4px" }}>
-        <div style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)", borderRadius: "999px", padding: "4px 10px", fontSize: "clamp(0.55rem, 1.2vw, 0.7rem)", fontFamily: robotoMono.style.fontFamily, display: "inline-flex", alignItems: "center", gap: "4px" }}>
-          🧾 {contador} gastitos
+      {/* NAVBAR */}
+      <nav style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
+        backgroundColor: navBg,
+        backdropFilter: "blur(12px)",
+        borderBottom: `1px solid ${modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+        padding: "12px 20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        boxSizing: "border-box",
+      }}>
+        {/* Izquierda: contador + total */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+          <span style={{ fontSize: "clamp(0.7rem, 1.5vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, opacity: 0.7 }}>
+            🧾 {contador} gastitos
+          </span>
+          {totalMes > 0 && (
+            <span style={{ fontSize: "clamp(0.8rem, 1.8vw, 1rem)", fontFamily: robotoMono.style.fontFamily, fontWeight: "bold" }}>
+              💸 ${totalMes.toLocaleString()}
+            </span>
+          )}
         </div>
-        {totalMes > 0 && (
-          <div style={{ backgroundColor: modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.12)", borderRadius: "999px", padding: "4px 10px", fontSize: "clamp(0.55rem, 1.2vw, 0.7rem)", fontFamily: robotoMono.style.fontFamily, fontWeight: "bold", display: "inline-flex", alignItems: "center", gap: "4px" }}>
-            💸 ${totalMes.toLocaleString()}
-          </div>
-        )}
-      </div>
 
-      <main style={{ flex: 1, padding: "120px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
+        {/* Derecha: iconos */}
+        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <button onClick={() => setModalLogrosAbierto(true)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: color, display: "flex", alignItems: "center", gap: "4px", fontSize: "clamp(0.7rem, 1.5vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, padding: "6px 10px", borderRadius: "8px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}>
+            <Trophy size={16} /> {logrosDesbloqueados.length}/{LOGROS.length}
+          </button>
+          <button onClick={() => setModalAbierto(true)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: color, padding: "6px", borderRadius: "8px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", display: "flex", alignItems: "center" }}>
+            <Info size={18} />
+          </button>
+          <button onClick={() => setModoOscuro(!modoOscuro)}
+            style={{ background: "none", border: "none", cursor: "pointer", color: color, padding: "6px", borderRadius: "8px", backgroundColor: modoOscuro ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)", display: "flex", alignItems: "center" }}>
+            {modoOscuro ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        </div>
+      </nav>
+
+      <main style={{ flex: 1, padding: "100px 20px 20px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "4px" }}>
