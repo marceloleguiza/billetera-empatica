@@ -105,6 +105,8 @@ const frasePorTotal = (total: number) => {
   return "Tu billetera pidió asilo político. 💀";
 };
 
+const labelsPaso = ["Estado", "Gastito", "Monto", "Resultado"];
+
 const botonesVariants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.15 } },
@@ -146,11 +148,20 @@ export default function Home() {
   const [totalMes, setTotalMes] = useState(0);
   const [placeholderMonto] = useState(placeholdersMonto[Math.floor(Math.random() * placeholdersMonto.length)]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const inputGastitoRef = useRef<HTMLInputElement>(null);
+  const inputMontoRef = useRef<HTMLInputElement>(null);
 
+  // Loading reducido a 1.5s
   useEffect(() => {
-    const timer = setTimeout(() => setSplash(false), 2500);
+    const timer = setTimeout(() => setSplash(false), 1500);
     return () => clearTimeout(timer);
   }, []);
+
+  // Autoselect input al llegar al paso
+  useEffect(() => {
+    if (paso === 2) setTimeout(() => inputGastitoRef.current?.focus(), 400);
+    if (paso === 3) setTimeout(() => inputMontoRef.current?.focus(), 400);
+  }, [paso]);
 
   useEffect(() => {
     const guardado = parseInt(localStorage.getItem("migastitoContador") || "0");
@@ -301,10 +312,10 @@ export default function Home() {
   if (splash) {
     return (
       <main style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "100vh", backgroundColor: "#5ab0d4", color: "#1a3a4a", width: "100%", textAlign: "center", padding: "0 16px", boxSizing: "border-box" }}>
-        <motion.img src="/grupal.png" alt="Personajes" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+        <motion.img src="/grupal.png" alt="Personajes" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
           style={{ width: "clamp(150px, 40vw, 250px)", objectFit: "contain" }} />
         <div style={{ fontSize: "clamp(1.5rem, 5vw, 2.5rem)" }}>💸</div>
-        <motion.h1 animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 1, repeat: Infinity }}
+        <motion.h1 animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 0.8, repeat: Infinity }}
           style={{ fontSize: "clamp(1.5rem, 6vw, 2.5rem)", fontFamily: anton.style.fontFamily, letterSpacing: "clamp(1px, 0.5vw, 2px)", margin: 0 }}>
           MI GASTITO
         </motion.h1>
@@ -331,8 +342,11 @@ export default function Home() {
           border-radius: 8px; font-size: 0.8rem; white-space: nowrap;
           pointer-events: none; z-index: 99;
         }
+        .btn-opcion:hover { transform: scale(1.1) !important; box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important; }
+        .btn-opcion:active { transform: scale(0.96) !important; }
       `}</style>
 
+      {/* Modal logro */}
       <AnimatePresence>
         {logroNuevo && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -353,6 +367,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Modal logros */}
       <AnimatePresence>
         {modalLogrosAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -383,6 +398,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Modal ¿Qué es esto? */}
       <AnimatePresence>
         {modalAbierto && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -455,13 +471,29 @@ export default function Home() {
           </h1>
         </motion.div>
 
-        <p style={{ fontSize: "clamp(0.7rem, 2vw, 0.9rem)", marginBottom: "16px", opacity: 0.7, zIndex: 1, fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px", textAlign: "center", width: "100%", padding: "0 16px", boxSizing: "border-box" }}>
+        <p style={{ fontSize: "clamp(0.7rem, 2vw, 0.9rem)", marginBottom: "8px", opacity: 0.7, zIndex: 1, fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px", textAlign: "center", width: "100%", padding: "0 16px", boxSizing: "border-box" }}>
           {mensajesPorHora()}
         </p>
 
-        {/* Barra de progreso más ancha y gruesa */}
-        <div style={{ width: "100%", maxWidth: "600px", height: "10px", backgroundColor: modoOscuro ? "#1e3a4a" : "#b0d8f0", borderRadius: "999px", marginBottom: "24px", zIndex: 1 }}>
-          <motion.div animate={{ width: `${porcentajePaso}%` }} transition={{ duration: 0.4 }} style={{ height: "100%", backgroundColor: color, borderRadius: "999px" }} />
+        {/* Barra de progreso con labels */}
+        <div style={{ width: "100%", maxWidth: "600px", marginBottom: "24px", zIndex: 1 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
+            {labelsPaso.map((label, i) => (
+              <span key={label} style={{
+                fontSize: "clamp(0.55rem, 1.2vw, 0.7rem)",
+                fontFamily: robotoMono.style.fontFamily,
+                opacity: paso === i + 1 ? 1 : 0.4,
+                fontWeight: paso === i + 1 ? "bold" : "normal",
+                color: paso === i + 1 ? color : undefined,
+                transition: "all 0.3s ease",
+              }}>
+                {label}
+              </span>
+            ))}
+          </div>
+          <div style={{ width: "100%", height: "10px", backgroundColor: modoOscuro ? "#1e3a4a" : "#b0d8f0", borderRadius: "999px" }}>
+            <motion.div animate={{ width: `${porcentajePaso}%` }} transition={{ duration: 0.4 }} style={{ height: "100%", backgroundColor: color, borderRadius: "999px" }} />
+          </div>
         </div>
 
         <AnimatePresence mode="wait">
@@ -509,9 +541,8 @@ export default function Home() {
                         {tooltipVisible === id && <div className="tooltip-box">{tooltipPorEstado[id]}</div>}
                         <img src={`/${id.toLowerCase()}.png`} alt={label} style={{ width: "clamp(80px, 15vw, 120px)", height: "clamp(80px, 15vw, 120px)", objectFit: "contain" }} />
                         <Button size="lg" variant="outline" onClick={() => seleccionarEstado(id)}
-                          style={{ fontSize: "clamp(0.8rem, 2vw, 1rem)", padding: "20px clamp(16px, 3vw, 32px)", borderColor: color, color: color, backgroundColor: "transparent", fontWeight: "bold", borderRadius: "16px", transition: "transform 0.2s ease", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}
-                          onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => (e.currentTarget.style.transform = "scale(1.08)")}
-                          onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => (e.currentTarget.style.transform = "scale(1)")}>
+                          className="btn-opcion"
+                          style={{ fontSize: "clamp(0.8rem, 2vw, 1rem)", padding: "20px clamp(16px, 3vw, 32px)", borderColor: color, color: color, backgroundColor: "transparent", fontWeight: "bold", borderRadius: "16px", transition: "transform 0.15s ease, box-shadow 0.15s ease", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
                           {label}
                         </Button>
                       </motion.div>
@@ -527,8 +558,21 @@ export default function Home() {
                 <motion.img initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.4 }}
                   src={`/${estadoFinanciero.toLowerCase()}.png`} alt={estadoFinanciero}
                   style={{ width: "clamp(120px, 30vw, 200px)", height: "clamp(120px, 30vw, 200px)", objectFit: "contain" }} />
-                <input type="text" placeholder={sugerenciaActual} value={gastito} onChange={(e) => setGastito(e.target.value)}
-                  style={{ padding: "10px", fontSize: "clamp(12px, 2vw, 14px)", width: "100%", maxWidth: "300px", borderRadius: "8px", border: `1px solid ${color}`, color: color, backgroundColor: "transparent", boxSizing: "border-box", fontFamily: robotoMono.style.fontFamily }} />
+                <div style={{ width: "100%", maxWidth: "300px", textAlign: "left" }}>
+                  <label style={{ fontSize: "0.75rem", opacity: 0.7, fontFamily: robotoMono.style.fontFamily, display: "block", marginBottom: "4px" }}>
+                    ¿En qué vas a gastar?
+                  </label>
+                  <input
+                    ref={inputGastitoRef}
+                    type="text"
+                    placeholder={sugerenciaActual}
+                    value={gastito}
+                    onChange={(e) => setGastito(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && confirmarGastito()}
+                    aria-label="Escribí tu gastito"
+                    style={{ padding: "12px", fontSize: "clamp(12px, 2vw, 14px)", width: "100%", borderRadius: "8px", border: `2px solid ${color}`, color: color, backgroundColor: "transparent", boxSizing: "border-box", fontFamily: robotoMono.style.fontFamily, outline: "none" }}
+                  />
+                </div>
                 <p style={{ fontSize: "0.75rem", opacity: 0.6 }}>
                   💡 Sugerencia: <span style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => setGastito(sugerenciaActual)}>{sugerenciaActual}</span>
                 </p>
@@ -545,10 +589,23 @@ export default function Home() {
                 <motion.img initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.4 }}
                   src={`/${estadoFinanciero.toLowerCase()}.png`} alt={estadoFinanciero}
                   style={{ width: "clamp(100px, 25vw, 160px)", height: "clamp(100px, 25vw, 160px)", objectFit: "contain" }} />
-                <div style={{ position: "relative", width: "100%", maxWidth: "300px" }}>
-                  <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", fontWeight: "bold", fontSize: "16px" }}>$</span>
-                  <input type="number" placeholder={placeholderMonto} value={monto} onChange={(e) => setMonto(e.target.value)}
-                    style={{ padding: "10px 10px 10px 28px", fontSize: "clamp(14px, 2vw, 16px)", width: "100%", borderRadius: "8px", border: `1px solid ${color}`, color: color, backgroundColor: "transparent", boxSizing: "border-box", fontFamily: robotoMono.style.fontFamily }} />
+                <div style={{ width: "100%", maxWidth: "300px", textAlign: "left" }}>
+                  <label style={{ fontSize: "0.75rem", opacity: 0.7, fontFamily: robotoMono.style.fontFamily, display: "block", marginBottom: "4px" }}>
+                    Monto en pesos
+                  </label>
+                  <div style={{ position: "relative" }}>
+                    <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", fontWeight: "bold", fontSize: "16px" }}>$</span>
+                    <input
+                      ref={inputMontoRef}
+                      type="number"
+                      placeholder={placeholderMonto}
+                      value={monto}
+                      onChange={(e) => setMonto(e.target.value)}
+                      onKeyDown={(e) => e.key === "Enter" && confirmarMonto()}
+                      aria-label="Cuánto pensás gastar"
+                      style={{ padding: "12px 12px 12px 28px", fontSize: "clamp(14px, 2vw, 16px)", width: "100%", borderRadius: "8px", border: `2px solid ${color}`, color: color, backgroundColor: "transparent", boxSizing: "border-box", fontFamily: robotoMono.style.fontFamily, outline: "none" }}
+                    />
+                  </div>
                 </div>
                 <div style={{ display: "flex", gap: "10px" }}>
                   <Button size="lg" onClick={confirmarMonto} style={{ backgroundColor: color, color: modoOscuro ? "#0f1e2a" : "white", fontFamily: robotoMono.style.fontFamily, letterSpacing: "1px" }}>
