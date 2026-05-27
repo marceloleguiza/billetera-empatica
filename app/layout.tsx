@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Mi Gastito",
   description: "Decime en qué vas a gastar y te digo qué tan roto estás.",
+  icons: {
+    icon: "/Logo_Icono.png",
+    apple: "/Logo_Icono.png",
+  },
   openGraph: {
     title: "Mi Gastito 💸",
     description: "Decime en qué vas a gastar y te digo qué tan roto estás.",
