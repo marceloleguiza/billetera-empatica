@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Anton, Roboto_Mono } from "next/font/google";
 import confetti from "canvas-confetti";
-import { Button } from "@/components/ui/button";
 import { Download, MessageCircle, Instagram, Link, RefreshCw, X, Trophy, Info, Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -105,6 +104,16 @@ const frasePorTotal = (total: number) => {
   return "Tu billetera pidió asilo político. 💀";
 };
 
+// Convierte string con puntos a número
+const parseMonto = (valor: string): number => {
+  return Number(valor.replace(/\./g, "").replace(",", ".")) || 0;
+};
+
+// Formatea número como moneda argentina
+const formatMonto = (valor: number): string => {
+  return valor.toLocaleString("es-AR");
+};
+
 const labelsPaso = ["Estado", "Gastito", "Monto", "Resultado"];
 
 const botonesVariants = {
@@ -126,14 +135,11 @@ const LOGROS = [
   { id: "indigente_actitud", emoji: "🪦", titulo: "Indigente con actitud", descripcion: "Elegiste Indigente 3 veces. La ilusión no se rinde.", condicion: (_c: number, v: Record<string, number>) => v.Indigente >= 3 },
 ];
 
-// Paleta unificada con el logo
 const PALETA = {
   azulClaro: "#5ab0d4",
   azulMedio: "#3d8fc4",
   azulNavy: "#0f2d4a",
   azulOscuro: "#1a3a4a",
-  blanco: "#ffffff",
-  blancoSuave: "rgba(255,255,255,0.85)",
 };
 
 export default function Home() {
@@ -141,6 +147,7 @@ export default function Home() {
   const [estadoFinanciero, setEstadoFinanciero] = useState("");
   const [gastito, setGastito] = useState("");
   const [monto, setMonto] = useState("");
+  const [montoNum, setMontoNum] = useState(0);
   const [respuestaFinal, setRespuestaFinal] = useState("");
   const [modoOscuro, setModoOscuro] = useState(false);
   const [imgActual, setImgActual] = useState("ricachon");
@@ -220,8 +227,14 @@ export default function Home() {
     cambiarPaso(3, () => {});
   };
 
+  const handleMontoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Solo permite números y puntos
+    const valor = e.target.value.replace(/[^0-9.]/g, "");
+    setMonto(valor);
+  };
+
   const confirmarMonto = () => {
-    const montoNum = Number(monto.replace(/\./g, "").replace(",", "."));
+    const montoNumerico = parseMonto(monto);
     let respuestas: string[] = [];
     if (estadoFinanciero === "Ricachon") respuestas = respuestasRicachon;
     if (estadoFinanciero === "Pobreton") respuestas = respuestasPobreton;
@@ -229,10 +242,12 @@ export default function Home() {
     const base = respuestas[Math.floor(Math.random() * respuestas.length)];
     const respuesta = `¿${gastito}? ${base}`;
 
-    if (montoNum > 0) {
+    setMontoNum(montoNumerico);
+
+    if (montoNumerico > 0) {
       const mesActual = new Date().getMonth();
       const gastosData = JSON.parse(localStorage.getItem("migastitoData") || `{"mes": ${mesActual}, "gastos": []}`);
-      const nuevoHistorial = [...gastosData.gastos, { monto: montoNum, gastito, fecha: new Date().toISOString() }];
+      const nuevoHistorial = [...gastosData.gastos, { monto: montoNumerico, gastito, fecha: new Date().toISOString() }];
       localStorage.setItem("migastitoData", JSON.stringify({ mes: mesActual, gastos: nuevoHistorial }));
       setTotalMes(nuevoHistorial.reduce((acc: number, item: { monto: number }) => acc + item.monto, 0));
     }
@@ -271,7 +286,9 @@ export default function Home() {
 
   const compartirWhatsApp = () => {
     const url = "https://migastito.vercel.app";
-    const texto = monto ? `Este mes ya quemé $${Number(monto).toLocaleString()} en ${gastito} 💀 ¿y vos? ${url}` : `¡Mirá mi gastito del mes! ${url}`;
+    const texto = montoNum > 0
+      ? `Este mes ya quemé $${formatMonto(montoNum)} en ${gastito} 💀 ¿y vos? ${url}`
+      : `¡Mirá mi gastito del mes! ${url}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, "_blank");
   };
 
@@ -280,7 +297,7 @@ export default function Home() {
 
   const volverEmpezar = () => {
     cambiarPaso(1, () => {
-      setEstadoFinanciero(""); setGastito(""); setMonto(""); setRespuestaFinal("");
+      setEstadoFinanciero(""); setGastito(""); setMonto(""); setMontoNum(0); setRespuestaFinal("");
       setImgActual("ricachon");
       setSugerenciaActual(sugerencias[Math.floor(Math.random() * sugerencias.length)]);
     });
@@ -293,7 +310,6 @@ export default function Home() {
   const cardBorder = modoOscuro ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.5)";
   const porcentajePaso = paso === 1 ? 25 : paso === 2 ? 50 : paso === 3 ? 75 : 100;
 
-  // Estilos compartidos para inputs
   const inputStyle: React.CSSProperties = {
     padding: "14px 16px", fontSize: "clamp(13px, 2vw, 15px)", width: "100%",
     borderRadius: "12px", border: `2px solid ${modoOscuro ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.6)"}`,
@@ -326,7 +342,7 @@ export default function Home() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: modoOscuro ? "#0a1628" : `linear-gradient(160deg, ${PALETA.azulClaro} 0%, ${PALETA.azulMedio} 100%)`, color: color, transition: "all 0.3s ease", fontFamily: robotoMono.style.fontFamily, width: "100%", boxSizing: "border-box" }}>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: bg, color: color, transition: "all 0.3s ease", fontFamily: robotoMono.style.fontFamily, width: "100%", boxSizing: "border-box" }}>
 
       {paso === 1 && monedas.map((m) => (
         <div key={m.id} style={{ position: "fixed", left: `${m.x}%`, top: "-40px", fontSize: "1.5rem", animation: `caer 4s ${m.delay}s infinite linear`, pointerEvents: "none", zIndex: 0 }}>💰</div>
@@ -416,42 +432,27 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* NAVBAR — azul navy unificado con el logo */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 10,
-        backgroundColor: PALETA.azulNavy,
-        boxShadow: "0 2px 20px rgba(0,0,0,0.3)",
-        padding: "12px 24px", display: "flex", alignItems: "center",
-        justifyContent: "space-between", boxSizing: "border-box", minHeight: "72px",
-      }}>
-        {/* Izquierda */}
+      {/* NAVBAR */}
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 10, backgroundColor: PALETA.azulNavy, boxShadow: "0 2px 20px rgba(0,0,0,0.3)", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxSizing: "border-box", minHeight: "72px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: "100px" }}>
           <span style={{ fontSize: "clamp(0.7rem, 1.6vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, color: "rgba(255,255,255,0.6)" }}>
             🧾 {contador} gastitos
           </span>
           {totalMes > 0 && (
             <span style={{ fontSize: "clamp(0.85rem, 1.8vw, 1rem)", fontFamily: robotoMono.style.fontFamily, fontWeight: "bold", color: PALETA.azulClaro }}>
-              💸 ${totalMes.toLocaleString()}
+              💸 ${formatMonto(totalMes)}
             </span>
           )}
         </div>
-
-        {/* Centro: logo */}
-        <img src="/Logo_MiGastito.png" alt="Mi Gastito"
-          style={{ height: "clamp(40px, 6vw, 56px)", objectFit: "contain", position: "absolute", left: "50%", transform: "translateX(-50%)" }} />
-
-        {/* Derecha */}
+        <img src="/Logo_MiGastito.png" alt="Mi Gastito" style={{ height: "clamp(40px, 6vw, 56px)", objectFit: "contain", position: "absolute", left: "50%", transform: "translateX(-50%)" }} />
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-          <button onClick={() => setModalLogrosAbierto(true)}
-            style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", color: "white", display: "flex", alignItems: "center", gap: "6px", fontSize: "clamp(0.7rem, 1.6vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, padding: "8px 12px", borderRadius: "10px" }}>
+          <button onClick={() => setModalLogrosAbierto(true)} style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", color: "white", display: "flex", alignItems: "center", gap: "6px", fontSize: "clamp(0.7rem, 1.6vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, padding: "8px 12px", borderRadius: "10px" }}>
             <Trophy size={16} /> {logrosDesbloqueados.length}/{LOGROS.length}
           </button>
-          <button onClick={() => setModalAbierto(true)}
-            style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", color: "white", padding: "8px", borderRadius: "10px", display: "flex", alignItems: "center" }}>
+          <button onClick={() => setModalAbierto(true)} style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", color: "white", padding: "8px", borderRadius: "10px", display: "flex", alignItems: "center" }}>
             <Info size={18} />
           </button>
-          <button onClick={() => setModoOscuro(!modoOscuro)}
-            style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", color: "white", padding: "8px", borderRadius: "10px", display: "flex", alignItems: "center" }}>
+          <button onClick={() => setModoOscuro(!modoOscuro)} style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", color: "white", padding: "8px", borderRadius: "10px", display: "flex", alignItems: "center" }}>
             {modoOscuro ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </div>
@@ -459,7 +460,6 @@ export default function Home() {
 
       <main style={{ flex: 1, padding: "90px 20px 40px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
-        {/* Header: imagen + título */}
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "12px", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <img src="/grupal.png" alt="Personajes" style={{ width: "clamp(160px, 40vw, 280px)", objectFit: "contain", display: "block", margin: "0 auto" }} />
@@ -472,7 +472,6 @@ export default function Home() {
           {mensajesPorHora()}
         </p>
 
-        {/* Barra de progreso */}
         <div style={{ width: "100%", maxWidth: "600px", marginBottom: "28px", zIndex: 1 }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
             {labelsPaso.map((label, i) => (
@@ -498,7 +497,6 @@ export default function Home() {
                 <p style={{ fontSize: "clamp(0.9rem, 2.5vw, 1.2rem)", marginBottom: "24px", letterSpacing: "1px", fontWeight: "bold", color: modoOscuro ? "white" : PALETA.azulNavy }}>
                   ¿QUÉ TAN ROTO ESTÁS ESTE MES? 💀
                 </p>
-
                 {girando ? (
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
                     <motion.img key={imgActual} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} src={`/${imgActual}.png`} alt="girando"
@@ -522,7 +520,6 @@ export default function Home() {
                     ))}
                   </motion.div>
                 )}
-
                 {totalVotos > 1 && (
                   <div style={{ marginBottom: "20px", fontSize: "0.75rem", opacity: 0.6 }}>
                     {opcionesPaso1.map(({ id, label }) => (
@@ -537,9 +534,8 @@ export default function Home() {
                     ))}
                   </div>
                 )}
-
                 <button onClick={() => seleccionarEstado(opcionesPaso1[Math.floor(Math.random() * 3)].id)}
-                  style={{ backgroundColor: PALETA.azulNavy, color: "white", border: "none", borderRadius: "14px", padding: "16px 24px", width: "100%", fontFamily: robotoMono.style.fontFamily, letterSpacing: "2px", fontSize: "clamp(0.85rem, 2vw, 1rem)", fontWeight: "bold", cursor: "pointer", transition: "transform 0.15s ease" }}>
+                  style={{ backgroundColor: PALETA.azulNavy, color: "white", border: "none", borderRadius: "14px", padding: "16px 24px", width: "100%", fontFamily: robotoMono.style.fontFamily, letterSpacing: "2px", fontSize: "clamp(0.85rem, 2vw, 1rem)", fontWeight: "bold", cursor: "pointer" }}>
                   🎰 QUE DECIDA EL DESTINO
                 </button>
               </motion.div>
@@ -556,9 +552,7 @@ export default function Home() {
                   src={`/${estadoFinanciero.toLowerCase()}.png`} alt={estadoFinanciero}
                   style={{ width: "clamp(120px, 30vw, 180px)", height: "clamp(120px, 30vw, 180px)", objectFit: "contain" }} />
                 <div style={{ width: "100%", maxWidth: "320px", textAlign: "left" }}>
-                  <label style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: robotoMono.style.fontFamily, display: "block", marginBottom: "6px", letterSpacing: "1px" }}>
-                    ¿EN QUÉ VAS A GASTAR?
-                  </label>
+                  <label style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: robotoMono.style.fontFamily, display: "block", marginBottom: "6px", letterSpacing: "1px" }}>¿EN QUÉ VAS A GASTAR?</label>
                   <input ref={inputGastitoRef} type="text" placeholder={sugerenciaActual} value={gastito}
                     onChange={(e) => setGastito(e.target.value)} onKeyDown={(e) => e.key === "Enter" && confirmarGastito()}
                     aria-label="Escribí tu gastito" style={inputStyle} />
@@ -585,16 +579,20 @@ export default function Home() {
                   src={`/${estadoFinanciero.toLowerCase()}.png`} alt={estadoFinanciero}
                   style={{ width: "clamp(100px, 25vw, 160px)", height: "clamp(100px, 25vw, 160px)", objectFit: "contain" }} />
                 <div style={{ width: "100%", maxWidth: "320px", textAlign: "left" }}>
-                  <label style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: robotoMono.style.fontFamily, display: "block", marginBottom: "6px", letterSpacing: "1px" }}>
-                    MONTO EN PESOS
-                  </label>
+                  <label style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: robotoMono.style.fontFamily, display: "block", marginBottom: "6px", letterSpacing: "1px" }}>MONTO EN PESOS</label>
                   <div style={{ position: "relative" }}>
                     <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontWeight: "bold", fontSize: "18px", color: color, opacity: 0.7 }}>$</span>
-                    <input ref={inputMontoRef} type="number" placeholder={placeholderMonto} value={monto}
-                      onChange={(e) => setMonto(e.target.value)} onKeyDown={(e) => e.key === "Enter" && confirmarMonto()}
+                    <input ref={inputMontoRef} type="text" placeholder={placeholderMonto} value={monto}
+                      onChange={handleMontoChange}
+                      onKeyDown={(e) => e.key === "Enter" && confirmarMonto()}
                       aria-label="Cuánto pensás gastar"
                       style={{ ...inputStyle, paddingLeft: "32px" }} />
                   </div>
+                  {monto && parseMonto(monto) > 0 && (
+                    <p style={{ fontSize: "0.75rem", opacity: 0.5, marginTop: "6px", fontFamily: robotoMono.style.fontFamily }}>
+                      = ${formatMonto(parseMonto(monto))}
+                    </p>
+                  )}
                 </div>
                 <div style={{ display: "flex", gap: "12px" }}>
                   <button onClick={confirmarMonto}
@@ -609,17 +607,18 @@ export default function Home() {
               </motion.div>
             )}
 
-            {/* PASO 4 — RESULTADO */}
+            {/* PASO 4 */}
             {paso === 4 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px", padding: "0 8px", boxSizing: "border-box" }}>
 
-                {/* Monto poster */}
-                {monto && Number(monto) > 0 && (
+                {montoNum > 0 && (
                   <motion.div initial={{ opacity: 0, scale: 0.8, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.5 }}
                     style={{ background: `linear-gradient(135deg, ${PALETA.azulNavy}, ${PALETA.azulMedio})`, borderRadius: "20px", padding: "24px 32px", textAlign: "center", width: "100%", boxShadow: "0 8px 32px rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                    <p style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontFamily: robotoMono.style.fontFamily, letterSpacing: "3px", margin: "0 0 4px 0" }}>GASTITÉ</p>
+                    <p style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.6)", fontFamily: robotoMono.style.fontFamily, letterSpacing: "3px", margin: "0 0 4px 0" }}>
+                      GASTÉ EN {gastito.toUpperCase()}
+                    </p>
                     <p style={{ fontSize: "clamp(2.5rem, 9vw, 4.5rem)", fontFamily: anton.style.fontFamily, color: "white", margin: 0, letterSpacing: "2px" }}>
-                      ${Number(monto).toLocaleString()}
+                      ${formatMonto(montoNum)}
                     </p>
                     <p style={{ fontSize: "0.85rem", color: "rgba(255,255,255,0.7)", fontFamily: robotoMono.style.fontFamily, margin: "10px 0 0 0" }}>
                       {frasePorTotal(totalMes)}
@@ -627,21 +626,18 @@ export default function Home() {
                   </motion.div>
                 )}
 
-                {/* Gastito título */}
                 <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
                   style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)", fontFamily: anton.style.fontFamily, letterSpacing: "3px", textAlign: "center", margin: 0, color: modoOscuro ? "white" : PALETA.azulNavy }}>
                   {gastito.toUpperCase()}
                 </motion.h2>
 
-                {/* Frase empática */}
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}
-                  style={{ backgroundColor: cardBg, borderRadius: "16px", padding: "20px 24px", width: "100%", borderLeft: `4px solid ${PALETA.azulNavy}`, backdropFilter: "blur(12px)", border: `1px solid ${cardBorder}`, borderLeftWidth: "4px", borderLeftColor: PALETA.azulNavy }}>
+                  style={{ backgroundColor: cardBg, borderRadius: "16px", padding: "20px 24px", width: "100%", backdropFilter: "blur(12px)", border: `1px solid ${cardBorder}`, borderLeft: `4px solid ${PALETA.azulNavy}` }}>
                   <p style={{ fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)", fontStyle: "italic", lineHeight: 1.8, textAlign: "left", margin: 0 }}>
                     {respuestaFinal}
                   </p>
                 </motion.div>
 
-                {/* Hook viral */}
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.3 }}
                   style={{ fontSize: "clamp(1.1rem, 3vw, 1.4rem)", fontWeight: "bold", textAlign: "center", margin: 0, color: modoOscuro ? "white" : PALETA.azulNavy }}>
                   ¿Y vos? Probalo 👇
@@ -651,13 +647,11 @@ export default function Home() {
                   🔥 Ya somos {contador} personas gastando sin culpa
                 </p>
 
-                {/* Card grande */}
                 <motion.img src={cardPorEstado[estadoFinanciero]} alt="Mi gastito"
                   initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, delay: 0.2 }}
                   whileHover={{ scale: 1.04 }}
                   style={{ width: "clamp(240px, 80vw, 380px)", borderRadius: "20px", boxShadow: "0 12px 40px rgba(0,0,0,0.3)", cursor: "pointer", border: `3px solid ${PALETA.azulNavy}` }} />
 
-                {/* Botones compartir */}
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
                   <button className="btn-compartir" onClick={descargarCard} style={btnCompartirStyle(PALETA.azulNavy)}>
                     <Download size={18} /> DESCARGAR
@@ -677,6 +671,7 @@ export default function Home() {
                   style={{ backgroundColor: "transparent", color: modoOscuro ? "white" : PALETA.azulNavy, border: `2px solid ${modoOscuro ? "rgba(255,255,255,0.3)" : PALETA.azulNavy}`, borderRadius: "14px", padding: "14px 28px", fontFamily: robotoMono.style.fontFamily, letterSpacing: "2px", fontSize: "clamp(0.85rem, 2vw, 1rem)", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", marginTop: "8px" }}>
                   <RefreshCw size={16} /> VOLVER A EMPEZAR
                 </button>
+
               </div>
             )}
 
