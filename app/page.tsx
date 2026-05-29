@@ -104,12 +104,10 @@ const frasePorTotal = (total: number) => {
   return "Tu billetera pidió asilo político. 💀";
 };
 
-// Convierte string con puntos a número
 const parseMonto = (valor: string): number => {
   return Number(valor.replace(/\./g, "").replace(",", ".")) || 0;
 };
 
-// Formatea número como moneda argentina
 const formatMonto = (valor: number): string => {
   return valor.toLocaleString("es-AR");
 };
@@ -228,7 +226,6 @@ export default function Home() {
   };
 
   const handleMontoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Solo permite números y puntos
     const valor = e.target.value.replace(/[^0-9.]/g, "");
     setMonto(valor);
   };
@@ -241,7 +238,6 @@ export default function Home() {
     if (estadoFinanciero === "Indigente") respuestas = respuestasIndigente;
     const base = respuestas[Math.floor(Math.random() * respuestas.length)];
     const respuesta = `¿${gastito}? ${base}`;
-
     setMontoNum(montoNumerico);
 
     if (montoNumerico > 0) {
@@ -432,8 +428,8 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      {/* NAVBAR */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 10, backgroundColor: PALETA.azulNavy, boxShadow: "0 2px 20px rgba(0,0,0,0.3)", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxSizing: "border-box", minHeight: "72px" }}>
+      {/* NAVBAR — logo más grande y navbar más alto */}
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 10, backgroundColor: PALETA.azulNavy, boxShadow: "0 2px 20px rgba(0,0,0,0.3)", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", boxSizing: "border-box", minHeight: "90px" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: "100px" }}>
           <span style={{ fontSize: "clamp(0.7rem, 1.6vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, color: "rgba(255,255,255,0.6)" }}>
             🧾 {contador} gastitos
@@ -444,7 +440,9 @@ export default function Home() {
             </span>
           )}
         </div>
-        <img src="/Logo_MiGastito.png" alt="Mi Gastito" style={{ height: "clamp(40px, 6vw, 56px)", objectFit: "contain", position: "absolute", left: "50%", transform: "translateX(-50%)" }} />
+        {/* Logo más grande */}
+        <img src="/Logo_MiGastito.png" alt="Mi Gastito"
+          style={{ height: "clamp(56px, 8vw, 80px)", objectFit: "contain", position: "absolute", left: "50%", transform: "translateX(-50%)" }} />
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
           <button onClick={() => setModalLogrosAbierto(true)} style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", color: "white", display: "flex", alignItems: "center", gap: "6px", fontSize: "clamp(0.7rem, 1.6vw, 0.85rem)", fontFamily: robotoMono.style.fontFamily, padding: "8px 12px", borderRadius: "10px" }}>
             <Trophy size={16} /> {logrosDesbloqueados.length}/{LOGROS.length}
@@ -458,7 +456,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <main style={{ flex: 1, padding: "90px 20px 40px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
+      <main style={{ flex: 1, padding: "110px 20px 40px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden", width: "100%", boxSizing: "border-box" }}>
 
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           style={{ zIndex: 1, textAlign: "center", width: "100%", marginBottom: "12px", display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -490,7 +488,6 @@ export default function Home() {
           <motion.div key={paso} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -24 }} transition={{ duration: 0.3 }}
             style={{ width: "100%", maxWidth: "600px", zIndex: 1, textAlign: "center" }}>
 
-            {/* PASO 1 */}
             {paso === 1 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
                 style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}`, borderRadius: "24px", padding: "clamp(20px, 4vw, 36px)", width: "100%", boxSizing: "border-box", backdropFilter: "blur(12px)", boxShadow: "0 8px 32px rgba(0,0,0,0.15)" }}>
@@ -541,7 +538,6 @@ export default function Home() {
               </motion.div>
             )}
 
-            {/* PASO 2 */}
             {paso === 2 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
                 style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}`, borderRadius: "24px", padding: "clamp(20px, 4vw, 36px)", width: "100%", boxSizing: "border-box", backdropFilter: "blur(12px)", boxShadow: "0 8px 32px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
@@ -567,7 +563,6 @@ export default function Home() {
               </motion.div>
             )}
 
-            {/* PASO 3 */}
             {paso === 3 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
                 style={{ backgroundColor: cardBg, border: `1px solid ${cardBorder}`, borderRadius: "24px", padding: "clamp(20px, 4vw, 36px)", width: "100%", boxSizing: "border-box", backdropFilter: "blur(12px)", boxShadow: "0 8px 32px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
@@ -583,10 +578,8 @@ export default function Home() {
                   <div style={{ position: "relative" }}>
                     <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontWeight: "bold", fontSize: "18px", color: color, opacity: 0.7 }}>$</span>
                     <input ref={inputMontoRef} type="text" placeholder={placeholderMonto} value={monto}
-                      onChange={handleMontoChange}
-                      onKeyDown={(e) => e.key === "Enter" && confirmarMonto()}
-                      aria-label="Cuánto pensás gastar"
-                      style={{ ...inputStyle, paddingLeft: "32px" }} />
+                      onChange={handleMontoChange} onKeyDown={(e) => e.key === "Enter" && confirmarMonto()}
+                      aria-label="Cuánto pensás gastar" style={{ ...inputStyle, paddingLeft: "32px" }} />
                   </div>
                   {monto && parseMonto(monto) > 0 && (
                     <p style={{ fontSize: "0.75rem", opacity: 0.5, marginTop: "6px", fontFamily: robotoMono.style.fontFamily }}>
@@ -607,10 +600,8 @@ export default function Home() {
               </motion.div>
             )}
 
-            {/* PASO 4 */}
             {paso === 4 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px", padding: "0 8px", boxSizing: "border-box" }}>
-
                 {montoNum > 0 && (
                   <motion.div initial={{ opacity: 0, scale: 0.8, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 0.5 }}
                     style={{ background: `linear-gradient(135deg, ${PALETA.azulNavy}, ${PALETA.azulMedio})`, borderRadius: "20px", padding: "24px 32px", textAlign: "center", width: "100%", boxShadow: "0 8px 32px rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.15)" }}>
@@ -625,33 +616,27 @@ export default function Home() {
                     </p>
                   </motion.div>
                 )}
-
                 <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
                   style={{ fontSize: "clamp(1.8rem, 6vw, 3rem)", fontFamily: anton.style.fontFamily, letterSpacing: "3px", textAlign: "center", margin: 0, color: modoOscuro ? "white" : PALETA.azulNavy }}>
                   {gastito.toUpperCase()}
                 </motion.h2>
-
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}
                   style={{ backgroundColor: cardBg, borderRadius: "16px", padding: "20px 24px", width: "100%", backdropFilter: "blur(12px)", border: `1px solid ${cardBorder}`, borderLeft: `4px solid ${PALETA.azulNavy}` }}>
                   <p style={{ fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)", fontStyle: "italic", lineHeight: 1.8, textAlign: "left", margin: 0 }}>
                     {respuestaFinal}
                   </p>
                 </motion.div>
-
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.3 }}
                   style={{ fontSize: "clamp(1.1rem, 3vw, 1.4rem)", fontWeight: "bold", textAlign: "center", margin: 0, color: modoOscuro ? "white" : PALETA.azulNavy }}>
                   ¿Y vos? Probalo 👇
                 </motion.p>
-
                 <p style={{ fontSize: "0.75rem", opacity: 0.5, fontFamily: robotoMono.style.fontFamily, margin: 0 }}>
                   🔥 Ya somos {contador} personas gastando sin culpa
                 </p>
-
                 <motion.img src={cardPorEstado[estadoFinanciero]} alt="Mi gastito"
                   initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4, delay: 0.2 }}
                   whileHover={{ scale: 1.04 }}
                   style={{ width: "clamp(240px, 80vw, 380px)", borderRadius: "20px", boxShadow: "0 12px 40px rgba(0,0,0,0.3)", cursor: "pointer", border: `3px solid ${PALETA.azulNavy}` }} />
-
                 <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center", width: "100%" }}>
                   <button className="btn-compartir" onClick={descargarCard} style={btnCompartirStyle(PALETA.azulNavy)}>
                     <Download size={18} /> DESCARGAR
@@ -666,12 +651,10 @@ export default function Home() {
                     <Link size={18} /> COPIAR LINK
                   </button>
                 </div>
-
                 <button onClick={volverEmpezar}
                   style={{ backgroundColor: "transparent", color: modoOscuro ? "white" : PALETA.azulNavy, border: `2px solid ${modoOscuro ? "rgba(255,255,255,0.3)" : PALETA.azulNavy}`, borderRadius: "14px", padding: "14px 28px", fontFamily: robotoMono.style.fontFamily, letterSpacing: "2px", fontSize: "clamp(0.85rem, 2vw, 1rem)", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px", marginTop: "8px" }}>
                   <RefreshCw size={16} /> VOLVER A EMPEZAR
                 </button>
-
               </div>
             )}
 
@@ -683,7 +666,7 @@ export default function Home() {
         <p style={{ marginBottom: "8px" }}>
           HECHO POR <a href="https://instagram.com/EnemigoMutante" target="_blank" rel="noopener noreferrer" style={{ color: modoOscuro ? PALETA.azulClaro : PALETA.azulNavy, textDecoration: "none", fontWeight: "bold" }}>@ENEMIGOMUTANTE</a> © 2026
         </p>
-        <a href="https://cafecito.app/enemigomutante" target="_blank" rel="noopener noreferrer" style={{ color: modoOscuro ? PALETA.azulClaro : PALETA.azulNavy, textDecoration: "none", fontWeight: "bold" }}>
+        <a href="https://cafecito.app/mutazion" target="_blank" rel="noopener noreferrer" style={{ color: modoOscuro ? PALETA.azulClaro : PALETA.azulNavy, textDecoration: "none", fontWeight: "bold" }}>
           ☕ INVITAME UN CAFECITO
         </a>
       </footer>
