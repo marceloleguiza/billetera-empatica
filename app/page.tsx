@@ -410,7 +410,7 @@ export default function Home() {
             style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.4)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px" }}>
             <motion.div initial={{ opacity: 0, scale: 0.92, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ duration: 0.25 }} onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
-              style={{ backgroundColor: modoOscuro ? "rgba(10,22,40,0.97)" : "rgba(255,255,255,0.95)", backdropFilter: "blur(16px)", color: color, borderRadius: "20px", padding: "32px", maxWidth: "480px", width: "100%", boxShadow: "0 16px 48px rgba(0,0,0,0.2)", position: "relative", border: `1px solid ${cardBorder}` }}>
+              style={{ backgroundColor: modoOscuro ? "rgba(10,22,40,0.97)" : "rgba(255,255,255,0.6)", backdropFilter: "blur(16px)", color: color, borderRadius: "20px", padding: "32px", maxWidth: "480px", width: "100%", boxShadow: "0 16px 48px rgba(0,0,0,0.2)", position: "relative", border: `1px solid ${cardBorder}` }}>
               <button onClick={() => setModalAbierto(false)} style={{ position: "absolute", top: "16px", right: "16px", background: "none", border: "none", cursor: "pointer", color: color }}><X size={20} /></button>
               <h2 style={{ fontFamily: anton.style.fontFamily, fontSize: "clamp(1.2rem, 4vw, 1.8rem)", marginBottom: "16px", letterSpacing: "1px" }}>💸 ¿QUÉ ES MI GASTITO?</h2>
               <p style={{ marginBottom: "12px", lineHeight: 1.7 }}>Es una app para celebrar tus decisiones financieras sin culpa. Sabemos que a veces la billetera no acompaña… pero el gastito igual va.</p>
